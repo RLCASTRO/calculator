@@ -18,15 +18,49 @@ const fieldNumberTwo = document.getElementById('numberTwo-value');
 const fieldResult = document.getElementById('result-value');
 const fieldOperator = document.getElementById('operator-value');
 
-function add() {}
+function add(numberOne, numberTwo) {
+  return (+numberOne + +numberTwo).toFixed(2);
+}
 
-function subtract() {}
+function subtract(numberOne, numberTwo) {
+  return (+numberOne - +numberTwo).toFixed(2);
+}
 
-function multiply() {}
+function multiply(numberOne, numberTwo) {
+  return +numberOne * +numberTwo;
+}
 
-function divide() {}
+function divide(numberOne, numberTwo) {
+  return (+numberOne / +numberTwo).toExponential(2);
+}
 
-function operate(operator, numberOne, nuumberTwo) {}
+function operate(operator, numberOne, numberTwo) {
+  switch (operator) {
+    case '+':
+      result = add(numberOne, numberTwo);
+      displayResult();
+      break;
+    case '-':
+      result = subtract(numberOne, numberTwo);
+      displayResult();
+      break;
+    case '*':
+      result = multiply(numberOne, numberTwo);
+      displayResult();
+      break;
+    case '/':
+      result = divide(numberOne, numberTwo);
+      displayResult();
+      break;
+
+    default:
+      break;
+  }
+}
+function displayResult() {
+  fieldResult.innerHTML = '';
+  fieldResult.innerHTML = result;
+}
 
 function clear() {
   fieldNumberOne.innerHTML = '';
@@ -53,8 +87,9 @@ function displayNumbers(digit) {
   }
 }
 
-function operatorButtons(operator) {
+function operatorButtons(oper) {
   inputSecondNumber = true;
+  operator = oper
   fieldOperator.innerHTML = operator;
 }
 
@@ -65,6 +100,9 @@ document.getElementById('+').addEventListener('click', (e) => operatorButtons(e.
 document.getElementById('-').addEventListener('click', (e) => operatorButtons(e.target.id));
 document.getElementById('*').addEventListener('click', (e) => operatorButtons(e.target.id));
 document.getElementById('/').addEventListener('click', (e) => operatorButtons(e.target.id));
+document
+  .getElementById('=')
+  .addEventListener('click', () => operate(operator, numberOne, numberTwo));
 
 //Numbers
 document.getElementById('0').addEventListener('click', (e) => displayNumbers(e.target.id));
