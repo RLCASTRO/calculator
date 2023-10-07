@@ -19,11 +19,11 @@ const fieldResult = document.getElementById('result-value');
 const fieldOperator = document.getElementById('operator-value');
 
 function add(numberOne, numberTwo) {
-  return (+numberOne + +numberTwo).toFixed(2);
+  return (+numberOne + +numberTwo);
 }
 
 function subtract(numberOne, numberTwo) {
-  return (+numberOne - +numberTwo).toFixed(2);
+  return (+numberOne - +numberTwo);
 }
 
 function multiply(numberOne, numberTwo) {
