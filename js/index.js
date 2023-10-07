@@ -27,11 +27,11 @@ function subtract(numberOne, numberTwo) {
 }
 
 function multiply(numberOne, numberTwo) {
-  return +numberOne * +numberTwo;
+  return (+numberOne * +numberTwo);
 }
 
 function divide(numberOne, numberTwo) {
-  return (+numberOne / +numberTwo).toExponential(2);
+  return (+numberOne / +numberTwo);
 }
 
 function operate(operator, numberOne, numberTwo) {
@@ -73,6 +73,8 @@ function clear() {
   result = '';
   inputSecondNumber = false;
 }
+
+
 
 function displayNumbers(digit) {
   if (!inputSecondNumber) {
