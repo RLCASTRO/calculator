@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 * {
       margin: 0;
@@ -19,10 +19,9 @@ html {
             2px 2px 6px rgba(0, 0, 0, 0.3);
       --color-equal-inset-shadow: inset -2px -2px 6px rgba(255, 106, 0, 0.5),
             inset 2px 2px 6px rgba(0, 0, 0, 0.3);
-}
-
+} 
 html[data-theme=dark] {
-      --bg: #131419;
+      --bg: #1e1f24;
       --color-text: #fff;
       --color-message: rgb(255, 70, 70);
       --color-orange: #ff6a00;
@@ -92,7 +91,6 @@ body {
       border-radius: 0.625rem;
 }
 
-
 #message-value {
       position: absolute;
       text-align: left;
@@ -159,7 +157,7 @@ body {
 
 #result > hr {
       color: red;
-
+      
 }
 
 #keyboard {
@@ -167,7 +165,7 @@ body {
 }
 
 .operator,
-.number {
+.number, .decimal {
       width: 45px;
       height: 45px;
       border-radius: 50%;
@@ -251,7 +249,8 @@ body {
 .operator:active,
 .number:active,
 .operator:hover,
-.number:hover {
+.number:hover,
+.btn:hover{
       box-shadow: var(--color-inset-shadow);
 }
 
@@ -271,4 +270,88 @@ label input[type=checkbox] {
 
 label input[type=checkbox]:checked~.fas {
       color: var(--color-orange);
+} */
+
+body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Courier New', Courier, monospace;
+}
+
+.btn{
+      height: 80px;
+      width: 80px;
+      margin: 15px;
+      font-size: 40px;
+      font-family: 'Courier New', Courier, monospace;
+}
+
+.number{
+      border: 2px solid darkturquoise;
+      border-radius: 10px;
+}
+.number:hover{
+      background-color: darkturquoise;
+}
+
+.operator{
+      border: 2px solid darkolivegreen;
+      border-radius: 10px;
+}
+.operator:hover{
+      background-color: darkolivegreen;
+}
+
+.decimal{
+border: 2px solid darkcyan;
+      border-radius: 10px;
+}
+.decimal:hover{
+      background-color: darkcyan;
+}
+
+.equal{
+border: 2px solid darkorchid;
+      border-radius: 10px;
+}
+.equal:hover{
+      background-color: darkorchid;
+}
+
+.clear{
+border: 2px solid darkorchid;
+      border-radius: 10px;
+}
+.clear:hover{
+      background-color: darkorchid;
+}
+
+.first-row{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+}
+
+#screen{
+      width: 325px;
+      height: 80px;
+      border: 1px solid black;
+      border-radius: 10px;
+      margin: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-end;
+}
+.previous{
+      font-size: 30px;
+      opacity: 60%;
+}
+.current{
+      font-size: 40px;
 }
