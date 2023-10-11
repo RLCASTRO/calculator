@@ -9,78 +9,191 @@ checkbox.addEventListener('change', function () {
 });
 
 let operator = '';
-let numberOne = '';
-let numberTwo = '';
+let number = '';
+let prevNumber = '';
 let result = '';
 let message = '';
-let outputNumber = '';
+let enableOperator = true;
+let enableDecimal = true;
 
-const fieldNumberOne = document.getElementById('numberOne-value');
-const fieldResult = document.getElementById('result-value');
-const fieldOperator = document.getElementById('operator-value');
-const fieldMessage = document.getElementById('message-value');
+const mainNumberValue = document.getElementById('mainNumber-value');
+const historyValue = document.getElementById('history-value');
+const resultValue = document.getElementById('result-value');
+const operatorValue = document.getElementById('operator-value');
+const messageValue = document.getElementById('message-value');
 
-//getting all the number elements and attaching event listeners to each one if the id is a number
+function clear() {
+  operator = '';
+  number = '';
+  prevNumber = '';
+  result = '';
+  message = '';
+  enableOperator = true;
+  enableDecimal = true;
+  mainNumberValue.innerHTML = '';
+  historyValue.innerHTML = '';
+  resultValue.innerHTML = '';
+  messageValue.innerHTML = '';
+  operatorValue.innerHTML = '';
+}
+
 const numberButtons = document.getElementsByClassName('number');
 for (let i = 0; i < numberButtons.length; i++) {
   numberButtons[i].addEventListener('click', function () {
     let id = this.id;
-    if (!isNaN(id)) {
-      outputNumber += id;
-      console.log(outputNumber);
-      printOutput(outputNumber);
-    } else {
-      console.log(id);
+    insert(id);
+    toggleOperator('on');
+  });
+}
+
+const toolsButtons = document.getElementsByClassName('tools');
+for (let i = 0; i < toolsButtons.length; i++) {
+  toolsButtons[i].addEventListener('click', function () {
+    switch (this.id) {
+      case 'clear':
+        clear();
+        break;
+      case 'backspace':
+        backspace();
+        break;
+      case '=':
+        operate();
+        prevNumber = '';
+        updateDisplay();
+        break;
+      default:
+        break;
     }
   });
 }
 
+//getting all the operators buttons and attaching event listeners to each one
 const operatorButtons = document.getElementsByClassName('operator');
 for (let i = 0; i < operatorButtons.length; i++) {
   operatorButtons[i].addEventListener('click', function () {
     operator = this.id;
-    console.log(operator);
-    operate();
+    prevNumber = number;
+    number = '';
+    if (operator !== '' && prevNumber !== '' && number !== '') {
+      operate();
+      console.log('inside if');
+    }
+    updateDisplay();
+    toggleOperator('off');
+    toggleDecimal('on');
   });
 }
 
+//gets the decimal point button and attach an event listener to it.
+const decimalButton = document.querySelector('.decimal');
+decimalButton.addEventListener('click', function () {
+  let id = this.id;
+
+  if (enableDecimal) {
+    console.log(this.id);
+    insert(id);
+    toggleDecimal('off');
+  }
+});
+
+function updateDisplay() {
+  mainNumberValue.innerHTML = number;
+  historyValue.innerHTML = prevNumber;
+  resultValue.innerHTML = result;
+  messageValue.innerHTML = message;
+  operatorValue.innerHTML = operator;
+}
+
+function backspace() {
+  number = number.slice(0, -1);
+  updateDisplay();
+}
+
 //prints the accumulated number in the HTML element
-function printOutput(number) {
-  fieldNumberOne.innerHTML = number;
+function insert(num) {
+  number += num;
+  updateDisplay();
+}
+
+function insertOperator(operator) {
+  console.log(operator);
+
+  mainNumberValue.innerHTML += operator;
+}
+
+function toggleOperator(status) {
+  enableOperator = status === 'on' ? true : false;
+}
+
+function toggleDecimal(status) {
+  enableDecimal = status === 'on' ? true : false;
 }
 
 function add(numberOne, numberTwo) {
-  return +numberOne + +numberTwo;
+  // Convert the input strings to numbers and then perform addition
+  const num1 = parseFloat(numberOne);
+  const num2 = parseFloat(numberTwo);
+
+  // if (isNaN(num1) || isNaN(num2)) {
+  //   return 'Error: Invalid input';
+  // }
+  return num1 + num2;
 }
 
 function subtract(numberOne, numberTwo) {
+  const num1 = parseFloat(numberOne);
+  const num2 = parseFloat(numberTwo);
   return +numberOne - +numberTwo;
 }
 
 function multiply(numberOne, numberTwo) {
+  const num1 = parseFloat(numberOne);
+  const num2 = parseFloat(numberTwo);
   return +numberOne * +numberTwo;
 }
 
 function divide(numberOne, numberTwo) {
-  if (num2 === 0) {
-    return 'Error: Division by zero not possible';
+  const num1 = parseFloat(numberOne);
+  const num2 = parseFloat(numberTwo);
+  if (num2 === 0 || !isFinite(num1 / num2)) {
+    message = 'Error: Division by zero not possible';
+    number = '';
+    operator = '';
+    prevNumber = '';
+    updateDisplay();
+    return 0;
   }
+
+  if (isNaN(num1) || isNaN(num2)) {
+    message = 'Error: Invalid input';
+    updateDisplay();
+    return 0;
+  }
+
   return num1 / num2;
 }
 
-function operate(operator, numberOne, numberTwo) {
+function operate() {
   switch (operator) {
     case '+':
+      number = add(prevNumber, number).toString();
+      updateDisplay();
+      
       break;
     case '-':
+      number = subtract(prevNumber, number).toString();
+      updateDisplay();
       break;
     case '*':
+      number = multiply(prevNumber, number).toString();
+      updateDisplay();
       break;
     case '/':
-      break;
-    case 'clear':
-      break;
-    case 'backspace':
+      number = divide(prevNumber, number);
+      if (number === 0) {
+        number = '';
+      }
+      updateDisplay();
       break;
     default:
       break;

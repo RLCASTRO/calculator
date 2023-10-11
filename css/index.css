@@ -110,7 +110,7 @@ body {
       border-bottom: 3px solid rgba(0, 0, 0, 0.05);
 }
 
-#numberOne-value {
+#history-value {
       position: absolute;
       text-align: right;
       bottom: 50%;
@@ -119,7 +119,7 @@ body {
       color: var(--color-text);
 }
 
-#numberTwo-value {
+#mainNumber-value {
       position: absolute;
       text-align: right;
       bottom: 30%;
@@ -157,16 +157,14 @@ body {
       width: 100%;
 }
 
-#result > hr {
-      color: red;
-
-}
 
 #keyboard {
       padding: 1.875rem 1.25rem;
 }
 
 .operator,
+.tools,
+.decimal,
 .number {
       width: 45px;
       height: 45px;
@@ -244,13 +242,17 @@ body {
       box-shadow: var(--color-equal-shadow);
 }
 
-.operator {
+.operator,
+.tools {
       color: var(--color-orange);
 }
 
 .operator:active,
+.tools:active,
 .number:active,
+.tools:active,
 .operator:hover,
+.tools:hover,
 .number:hover {
       box-shadow: var(--color-inset-shadow);
 }
