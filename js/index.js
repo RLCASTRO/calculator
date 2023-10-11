@@ -1,3 +1,4 @@
+//toggles the dark/white mode
 let checkbox = document.querySelector('input[name=theme]');
 checkbox.addEventListener('change', function () {
   if (this.checked) {
@@ -11,180 +12,77 @@ let operator = '';
 let numberOne = '';
 let numberTwo = '';
 let result = '';
-let inputSecondNumber = false;
 let message = '';
+let outputNumber = '';
 
 const fieldNumberOne = document.getElementById('numberOne-value');
-const fieldNumberTwo = document.getElementById('numberTwo-value');
 const fieldResult = document.getElementById('result-value');
 const fieldOperator = document.getElementById('operator-value');
 const fieldMessage = document.getElementById('message-value');
 
+//getting all the number elements and attaching event listeners to each one if the id is a number
+const numberButtons = document.getElementsByClassName('number');
+for (let i = 0; i < numberButtons.length; i++) {
+  numberButtons[i].addEventListener('click', function () {
+    let id = this.id;
+    if (!isNaN(id)) {
+      outputNumber += id;
+      console.log(outputNumber);
+      printOutput(outputNumber);
+    } else {
+      console.log(id);
+    }
+  });
+}
+
+const operatorButtons = document.getElementsByClassName('operator');
+for (let i = 0; i < operatorButtons.length; i++) {
+  operatorButtons[i].addEventListener('click', function () {
+    operator = this.id;
+    console.log(operator);
+    operate();
+  });
+}
+
+//prints the accumulated number in the HTML element
+function printOutput(number) {
+  fieldNumberOne.innerHTML = number;
+}
+
 function add(numberOne, numberTwo) {
-  let total = +numberOne + +numberTwo;
-  return verifyTotal(total);
+  return +numberOne + +numberTwo;
 }
 
 function subtract(numberOne, numberTwo) {
-  let total = +numberOne - +numberTwo;
-  return verifyTotal(total);
+  return +numberOne - +numberTwo;
 }
 
 function multiply(numberOne, numberTwo) {
-  let total = +numberOne * +numberTwo;
-  return verifyTotal(total);
+  return +numberOne * +numberTwo;
 }
 
 function divide(numberOne, numberTwo) {
-  let total = +numberOne / +numberTwo;
-  if (isNaN(total)) {
-    toggleButtons(true, 'Division by zero not supported');
-    result = 0;
+  if (num2 === 0) {
+    return 'Error: Division by zero not possible';
   }
-  return verifyTotal(total);
+  return num1 / num2;
 }
 
 function operate(operator, numberOne, numberTwo) {
-  toggleButtons(false, '');
   switch (operator) {
     case '+':
-      result = add(numberOne, numberTwo);
-      displayResult();
       break;
     case '-':
-      result = subtract(numberOne, numberTwo);
-      displayResult();
       break;
     case '*':
-      result = multiply(numberOne, numberTwo);
-      displayResult();
       break;
     case '/':
-      result = divide(numberOne, numberTwo);
-      displayResult();
       break;
-
+    case 'clear':
+      break;
+    case 'backspace':
+      break;
     default:
       break;
   }
-  toggleButtons(true, '');
 }
-function displayResult() {
-  fieldResult.innerHTML = '';
-  fieldResult.innerHTML = result;
-}
-
-function verifyTotal(total) {
-  if (maxNumberSize(total)) {
-    console.log('true');
-    return total;
-  } else {
-    console.log('false');
-    return total.toExponential(1);
-  }
-}
-
-function clear() {
-  fieldNumberOne.innerHTML = '';
-  fieldNumberTwo.innerHTML = '';
-  fieldResult.innerHTML = '';
-  fieldOperator.innerHTML = '';
-  fieldMessage.innerHTML = '';
-  operator = '';
-  numberOne = '';
-  numberTwo = '';
-  result = '';
-  inputSecondNumber = false;
-  message = '';
-  toggleButtons(false, '');
-}
-
-function toggleButtons(option, msg) {
-  const buttons = document.querySelectorAll('#keyboard .number');
-  buttons.forEach((button) => {
-    button.disabled = option ? true : false;
-  });
-  if (option) {
-    message = msg;
-    fieldMessage.innerHTML = '';
-    fieldMessage.innerHTML = message;
-  } else {
-    fieldMessage.innerHTML = '';
-  }
-}
-
-function toggleDecimalPoint(option, msg) {
-  const dotButton = document.querySelector("#keyboard .number[id='.']");
-  dotButton.disabled = option ? true : false;
-  if (option) {
-    message = msg;
-    fieldMessage.innerHTML = '';
-    fieldMessage.innerHTML = message;
-  } else {
-    fieldMessage.innerHTML = '';
-  }
-}
-
-function maxNumberSize(strNumber) {
-  if (strNumber.length >= 10) {
-    toggleButtons(true, 'Max number size reached');
-    return false;
-  } else {
-    return true;
-  }
-}
-
-function updateNumberOne(number) {
-  fieldNumberOne.innerHTML = '';
-  fieldNumberOne.innerHTML = number;
-  numberOne = number;
-  console.log(number);
-}
-
-function updateNumberTwo(number) {
-  fieldNumberOne.innerHTML = '';
-  fieldNumberOne.innerHTML = number;
-}
-
-function displayNumbers(digit) {
-  if (!inputSecondNumber) {
-    numberOne += maxNumberSize(numberOne) ? digit : '';
-    // maxNumberSize(numberOne);
-    fieldNumberOne.innerHTML = '';
-    fieldNumberOne.innerHTML = numberOne;
-  } else {
-    numberTwo += maxNumberSize(numberTwo) ? digit : '';
-    fieldNumberTwo.innerHTML = '';
-    fieldNumberTwo.innerHTML = numberTwo;
-  }
-}
-
-function operatorButtons(oper) {
-  inputSecondNumber = true;
-  operator = oper;
-  fieldOperator.innerHTML = operator;
-  toggleButtons(false, '');
-}
-
-//Operators
-document.getElementById('clear').addEventListener('click', () => clear());
-document.getElementById('+').addEventListener('click', (e) => operatorButtons(e.target.id));
-document.getElementById('-').addEventListener('click', (e) => operatorButtons(e.target.id));
-document.getElementById('*').addEventListener('click', (e) => operatorButtons(e.target.id));
-document.getElementById('/').addEventListener('click', (e) => operatorButtons(e.target.id));
-document
-  .getElementById('=')
-  .addEventListener('click', () => operate(operator, numberOne, numberTwo));
-
-//Numbers
-document.getElementById('0').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('1').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('2').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('3').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('4').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('5').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('6').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('7').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('8').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('9').addEventListener('click', (e) => displayNumbers(e.target.id));
-document.getElementById('.').addEventListener('click', (e) => displayNumbers(e.target.id));
