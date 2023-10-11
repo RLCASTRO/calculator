@@ -256,10 +256,6 @@ function handleNumber(num){
 } 
 
 function handleOperator(op){
-  if(currentNum === '') return;
-  if(previousNum !== ''){
-    calc()
-  }
   operator = op;
   previousNum = currentNum;
   currentNum = '';
