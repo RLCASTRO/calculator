@@ -35,6 +35,9 @@ function clear() {
   resultValue.innerHTML = '';
   messageValue.innerHTML = '';
   operatorValue.innerHTML = '';
+  toggleDecimalButton('on');
+  toggleNumberButtons('on');
+  toggleOperator('off');
 }
 
 const numberButtons = document.getElementsByClassName('number');
@@ -60,6 +63,8 @@ for (let i = 0; i < toolsButtons.length; i++) {
         operate();
         prevNumber = '';
         updateDisplay();
+        toggleNumberButtons('off');
+        toggleDecimalButton('off');
         break;
       default:
         break;
@@ -74,13 +79,14 @@ for (let i = 0; i < operatorButtons.length; i++) {
     operator = this.id;
     prevNumber = number;
     number = '';
+    toggleNumberButtons('on'); //
     if (operator !== '' && prevNumber !== '' && number !== '') {
       operate();
       console.log('inside if');
     }
     updateDisplay();
     toggleOperator('off');
-    toggleDecimal('on');
+    toggleDecimalButton('off');
   });
 }
 
@@ -90,9 +96,8 @@ decimalButton.addEventListener('click', function () {
   let id = this.id;
 
   if (enableDecimal) {
-    console.log(this.id);
     insert(id);
-    toggleDecimal('off');
+    toggleDecimalButton('off');
   }
 });
 
@@ -125,8 +130,23 @@ function toggleOperator(status) {
   enableOperator = status === 'on' ? true : false;
 }
 
-function toggleDecimal(status) {
-  enableDecimal = status === 'on' ? true : false;
+function toggleDecimalButton(status) {
+  if (status === 'off') {
+    decimalButton.disabled = true;
+  } else {
+    decimalButton.disabled = false;
+  }
+}
+function toggleNumberButtons(status) {
+  if (status === 'off') {
+    for (let i = 0; i < numberButtons.length; i++) {
+      numberButtons[i].disabled = true;
+    }
+  } else {
+    for (let i = 0; i < numberButtons.length; i++) {
+      numberButtons[i].disabled = false;
+    }
+  }
 }
 
 function add(numberOne, numberTwo) {
@@ -178,7 +198,7 @@ function operate() {
     case '+':
       number = add(prevNumber, number).toString();
       updateDisplay();
-      
+
       break;
     case '-':
       number = subtract(prevNumber, number).toString();
