@@ -54,7 +54,6 @@ for (let i = 0; i < numberButtons.length; i++) {
     if (firstOperation) {
       toggleDecimalButton('on');
     }
-    toggleOperatorButtons('on');
   });
 }
 
@@ -96,6 +95,8 @@ for (let i = 0; i < operatorButtons.length; i++) {
       operate();
       prevNumber = result;
       number = '';
+      secondOperation = false;
+      firstOperation = true;
       updateDisplay();
     } else {
       operator = this.id;
@@ -194,10 +195,6 @@ document.addEventListener('keydown', function (event) {
       firstOperation = false;
     }
   }
-
-  
-
-
 });
 
 function updateDisplay() {
