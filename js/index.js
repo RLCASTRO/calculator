@@ -1,4 +1,4 @@
-//toggles the dark/white mode
+// Toggles the dark/white mode
 let checkbox = document.querySelector('input[name=theme]');
 checkbox.addEventListener('change', function () {
   if (this.checked) {
@@ -87,7 +87,7 @@ for (let i = 0; i < toolsButtons.length; i++) {
   });
 }
 
-//getting all the operators buttons and attaching event listeners to each one
+// Getting all the operators buttons and attaching event listeners to each one
 const operatorButtons = document.getElementsByClassName('operator');
 for (let i = 0; i < operatorButtons.length; i++) {
   operatorButtons[i].addEventListener('click', function () {
@@ -106,13 +106,12 @@ for (let i = 0; i < operatorButtons.length; i++) {
       toggleNumberButtons('on');
       secondOperation = true;
       firstOperation = false;
-      // number = '';
       updateDisplay();
     }
   });
 }
 
-//gets the decimal point button and attach an event listener to it.
+// Gets the decimal point button and attach an event listener to it.
 const decimalButton = document.querySelector('.decimal');
 decimalButton.addEventListener('click', function () {
   let id = this.id;
@@ -129,6 +128,78 @@ decimalButton.addEventListener('click', function () {
   }
 });
 
+// Add event listener for keydown events
+document.addEventListener('keydown', function (event) {
+  const key = event.key;
+
+  if (!isNaN(key) || key === '.') {
+    insert(key);
+    toggleOperatorButtons('on');
+
+    if (secondOperation) {
+      toggleDecimalButton('on');
+    }
+    if (firstOperation) {
+      toggleDecimalButton('on');
+    }
+    toggleOperatorButtons('on');
+  }
+
+  if (['+', '-', '*', '/'].includes(key)) {
+    if (operator !== '' && prevNumber !== '' && number !== '') {
+      operator = key;
+      operate();
+      prevNumber = result;
+      number = '';
+      updateDisplay();
+    } else {
+      operator = key;
+      if (firstOperation) {
+        prevNumber = number;
+      }
+      number = '';
+      toggleNumberButtons('on');
+      secondOperation = true;
+      firstOperation = false;
+      updateDisplay();
+    }
+  }
+
+  if (key === '=') {
+    if (operator !== '' && prevNumber !== '' && number !== '') {
+      operate();
+      prevNumber = result;
+      number = '';
+      updateDisplay();
+    } else {
+      toggleNumberButtons('on');
+      secondOperation = true;
+      firstOperation = false;
+    }
+  }
+
+  if (key === 'Backspace') {
+    backspace();
+  }
+
+  if (key === 'Enter') {
+    if (operator !== '' && prevNumber !== '' && number !== '') {
+      operate();
+      prevNumber = result;
+      number = '';
+      updateDisplay();
+    } else {
+      toggleNumberButtons('on');
+      secondOperation = true;
+      firstOperation = false;
+    }
+  }
+
+  
+
+
+});
+
 function updateDisplay() {
   mainNumberValue.innerHTML = number;
   historyValue.innerHTML = prevNumber;
@@ -141,7 +212,7 @@ function backspace() {
   updateDisplay();
 }
 
-//prints the accumulated number in the HTML element
+// Prints the accumulated number in the HTML element
 function insert(num) {
   number += num;
   updateDisplay();
@@ -174,6 +245,7 @@ function toggleDecimalButton(status) {
     decimalDisabled = false;
   }
 }
+
 function toggleNumberButtons(status) {
   if (status === 'off') {
     for (let i = 0; i < numberButtons.length; i++) {
@@ -193,35 +265,30 @@ function startCalculator() {
   toggleDecimalButton('off');
   toggleOperatorButtons('off');
 }
-
 startCalculator();
 
 function add(numberOne, numberTwo) {
-  // Convert the input strings to numbers and then perform addition
   const num1 = parseFloat(numberOne);
   const num2 = parseFloat(numberTwo);
-
-  // if (isNaN(num1) || isNaN(num2)) {
-  //   return 'Error: Invalid input';
-  // }
   return num1 + num2;
 }
 
 function subtract(numberOne, numberTwo) {
   const num1 = parseFloat(numberOne);
   const num2 = parseFloat(numberTwo);
-  return +numberOne - +numberTwo;
+  return num1 - num2;
 }
 
 function multiply(numberOne, numberTwo) {
   const num1 = parseFloat(numberOne);
   const num2 = parseFloat(numberTwo);
-  return +numberOne * +numberTwo;
+  return num1 * num2;
 }
 
 function divide(numberOne, numberTwo) {
   const num1 = parseFloat(numberOne);
   const num2 = parseFloat(numberTwo);
+
   if (num2 === 0 || !isFinite(num1 / num2)) {
     message = 'Error: Division by zero not possible';
     number = '';
@@ -245,7 +312,6 @@ function operate() {
     case '+':
       result = add(prevNumber, number).toString();
       updateDisplay();
-
       break;
     case '-':
       result = subtract(prevNumber, number).toString();
