@@ -13,8 +13,11 @@ let number = '';
 let prevNumber = '';
 let result = '';
 let message = '';
-let enableOperator = true;
-let enableDecimal = true;
+let operatorsDisabled = false;
+let decimalDisabled = false;
+let numbersDisabled = true;
+let firstOperation = true;
+let secondOperation = false;
 
 const mainNumberValue = document.getElementById('mainNumber-value');
 const historyValue = document.getElementById('history-value');
@@ -28,16 +31,14 @@ function clear() {
   prevNumber = '';
   result = '';
   message = '';
-  enableOperator = true;
-  enableDecimal = true;
+  firstOperation = true;
+  secondOperation = false;
+  startCalculator();
   mainNumberValue.innerHTML = '';
   historyValue.innerHTML = '';
   resultValue.innerHTML = '';
   messageValue.innerHTML = '';
   operatorValue.innerHTML = '';
-  toggleDecimalButton('on');
-  toggleNumberButtons('on');
-  toggleOperator('off');
 }
 
 const numberButtons = document.getElementsByClassName('number');
@@ -45,7 +46,15 @@ for (let i = 0; i < numberButtons.length; i++) {
   numberButtons[i].addEventListener('click', function () {
     let id = this.id;
     insert(id);
-    toggleOperator('on');
+    toggleOperatorButtons('on');
+
+    if (secondOperation) {
+      toggleDecimalButton('on');
+    }
+    if (firstOperation) {
+      toggleDecimalButton('on');
+    }
+    toggleOperatorButtons('on');
   });
 }
 
@@ -60,11 +69,17 @@ for (let i = 0; i < toolsButtons.length; i++) {
         backspace();
         break;
       case '=':
-        operate();
-        prevNumber = '';
-        updateDisplay();
-        toggleNumberButtons('off');
-        toggleDecimalButton('off');
+        if (operator !== '' && prevNumber !== '' && number !== '') {
+          operate();
+          prevNumber = result;
+          number = '';
+          operator = '';
+          updateDisplay();
+        } else {
+          toggleNumberButtons('on');
+          secondOperation = true;
+          firstOperation = false;
+        }
         break;
       default:
         break;
@@ -76,17 +91,24 @@ for (let i = 0; i < toolsButtons.length; i++) {
 const operatorButtons = document.getElementsByClassName('operator');
 for (let i = 0; i < operatorButtons.length; i++) {
   operatorButtons[i].addEventListener('click', function () {
-    operator = this.id;
-    prevNumber = number;
-    number = '';
-    toggleNumberButtons('on'); //
     if (operator !== '' && prevNumber !== '' && number !== '') {
+      operator = this.id;
       operate();
-      console.log('inside if');
+      prevNumber = result;
+      number = '';
+      updateDisplay();
+    } else {
+      operator = this.id;
+      if (firstOperation) {
+        prevNumber = number;
+      }
+      number = '';
+      toggleNumberButtons('on');
+      secondOperation = true;
+      firstOperation = false;
+      // number = '';
+      updateDisplay();
     }
-    updateDisplay();
-    toggleOperator('off');
-    toggleDecimalButton('off');
   });
 }
 
@@ -94,9 +116,15 @@ for (let i = 0; i < operatorButtons.length; i++) {
 const decimalButton = document.querySelector('.decimal');
 decimalButton.addEventListener('click', function () {
   let id = this.id;
-
-  if (enableDecimal) {
-    insert(id);
+  insert(id);
+  if (firstOperation) {
+    firstOperation = false;
+    toggleOperatorButtons('off');
+    toggleDecimalButton('off');
+  }
+  if (secondOperation) {
+    secondOperation = false;
+    toggleOperatorButtons('off');
     toggleDecimalButton('off');
   }
 });
@@ -104,7 +132,6 @@ decimalButton.addEventListener('click', function () {
 function updateDisplay() {
   mainNumberValue.innerHTML = number;
   historyValue.innerHTML = prevNumber;
-  resultValue.innerHTML = result;
   messageValue.innerHTML = message;
   operatorValue.innerHTML = operator;
 }
@@ -121,20 +148,30 @@ function insert(num) {
 }
 
 function insertOperator(operator) {
-  console.log(operator);
-
   mainNumberValue.innerHTML += operator;
 }
 
-function toggleOperator(status) {
-  enableOperator = status === 'on' ? true : false;
+function toggleOperatorButtons(status) {
+  if (status === 'off') {
+    for (let i = 0; i < operatorButtons.length; i++) {
+      operatorButtons[i].disabled = true;
+    }
+    operatorsDisabled = true;
+  } else {
+    for (let i = 0; i < operatorButtons.length; i++) {
+      operatorButtons[i].disabled = false;
+    }
+    operatorsDisabled = false;
+  }
 }
 
 function toggleDecimalButton(status) {
   if (status === 'off') {
     decimalButton.disabled = true;
+    decimalDisabled = true;
   } else {
     decimalButton.disabled = false;
+    decimalDisabled = false;
   }
 }
 function toggleNumberButtons(status) {
@@ -142,12 +179,22 @@ function toggleNumberButtons(status) {
     for (let i = 0; i < numberButtons.length; i++) {
       numberButtons[i].disabled = true;
     }
+    numbersDisabled = true;
   } else {
     for (let i = 0; i < numberButtons.length; i++) {
       numberButtons[i].disabled = false;
     }
+    numbersDisabled = false;
   }
 }
+
+function startCalculator() {
+  toggleNumberButtons('on');
+  toggleDecimalButton('off');
+  toggleOperatorButtons('off');
+}
+
+startCalculator();
 
 function add(numberOne, numberTwo) {
   // Convert the input strings to numbers and then perform addition
@@ -196,22 +243,22 @@ function divide(numberOne, numberTwo) {
 function operate() {
   switch (operator) {
     case '+':
-      number = add(prevNumber, number).toString();
+      result = add(prevNumber, number).toString();
       updateDisplay();
 
       break;
     case '-':
-      number = subtract(prevNumber, number).toString();
+      result = subtract(prevNumber, number).toString();
       updateDisplay();
       break;
     case '*':
-      number = multiply(prevNumber, number).toString();
+      result = multiply(prevNumber, number).toString();
       updateDisplay();
       break;
     case '/':
-      number = divide(prevNumber, number);
-      if (number === 0) {
-        number = '';
+      result = divide(prevNumber, number);
+      if (result === 0) {
+        result = '';
       }
       updateDisplay();
       break;
